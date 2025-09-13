@@ -1,3 +1,5 @@
 streamlit
 pillow
 requests
+beautifulsoup4
+lxml
