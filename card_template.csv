@@ -1,4 +1,4 @@
-player,year,card_set,card_number,sport,attributes,grader,grade,parallel_variety,insert_set,autographed,autograph_auth,team,manufacturer,card_condition,card_type
+player,year,card_set,card_number,sport,attributes,grader,grade,parallel_variety,insert_set,autographed,autograph_auth,team,manufacturer,card_condition,card_type,pricing_type
 Michael Jordan,1986,Fleer,57,basketball,Rookie RC,PSA,10,,,,,Chicago Bulls,Fleer,Near Mint,Standard
 Joaquin Wilde,2022,Panini Chronicles WWE,FX-JWD,wrestling,Auto,,,Red Prizm,Flux Auto Red,Yes,Panini Authentic,WWE,Panini,Near Mint,Standard
 LeBron James,2023,Panini Prizm,1,basketball,Rookie RC Patch Auto /25,PSA,9,Gold Refractor,Rookie Patch Auto,Yes,Panini Authentic,Lakers,Panini,Near Mint,Standard

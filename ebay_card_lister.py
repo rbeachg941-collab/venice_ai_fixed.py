@@ -774,6 +774,7 @@ class CardLister:
             'event_tournament': input("Event/Tournament (e.g., Olympic Games, Super Bowl, World Cup) [optional]: ").strip(),
             'card_condition': input("Card Condition (Near Mint, Excellent, etc.) [optional]: ").strip(),
             'card_type': input("Card Type (Standard, Jumbo, etc.) [optional]: ").strip(),
+            'pricing_type': input("Pricing Type (Auction, Buy It Now) [optional]: ").strip(),
         }
         return details
     
@@ -1129,6 +1130,32 @@ class CardLister:
         
         return None
 
+    def detect_pricing_type(self, details):
+        """Detect pricing type from card details."""
+        pricing_input = details.get('pricing_type', '').lower()
+        if not pricing_input:
+            return None
+        
+        # eBay Pricing options
+        pricing_mapping = {
+            'auction': 'Auction',
+            'buy it now': 'Buy It Now',
+            'bin': 'Buy It Now',
+            'fixed price': 'Buy It Now',
+            'fixed': 'Buy It Now'
+        }
+        
+        # Direct match
+        if pricing_input in pricing_mapping:
+            return pricing_mapping[pricing_input]
+        
+        # Partial match
+        for keyword, ebay_pricing in pricing_mapping.items():
+            if keyword in pricing_input:
+                return ebay_pricing
+        
+        return None
+
     def suggest_category(self, sport: str) -> Tuple[str, str]:
         """Suggests an eBay category ID based on the sport."""
         detected_sport = self.detect_sport(sport)
@@ -1257,6 +1284,11 @@ class CardLister:
             specifics["Condition Type"] = "Graded: Professionally graded"
         else:
             specifics["Condition Type"] = "Ungraded: Not in original packaging or professionally graded"
+
+        # Pricing Type
+        detected_pricing = self.detect_pricing_type(details)
+        if detected_pricing:
+            specifics["Pricing"] = detected_pricing
         
         # Additional common fields with intelligent detection
         specifics["Country/Region of Manufacture"] = self.detect_country_region(details)
@@ -1501,7 +1533,8 @@ class CardLister:
                 'team': 'Chicago Bulls',
                 'manufacturer': 'Fleer',
                 'card_condition': 'Near Mint',
-                'card_type': 'Standard'
+                'card_type': 'Standard',
+                'pricing_type': 'Buy It Now'
             },
             {
                 'player': 'Joaquin Wilde',
@@ -1519,7 +1552,8 @@ class CardLister:
                 'team': 'WWE',
                 'manufacturer': 'Panini',
                 'card_condition': 'Near Mint',
-                'card_type': 'Standard'
+                'card_type': 'Standard',
+                'pricing_type': 'Auction'
             },
             {
                 'player': 'LeBron James',
@@ -1537,14 +1571,15 @@ class CardLister:
                 'team': 'Lakers',
                 'manufacturer': 'Panini',
                 'card_condition': 'Near Mint',
-                'card_type': 'Standard'
+                'card_type': 'Standard',
+                'pricing_type': 'Buy It Now'
             }
         ]
         
         fieldnames = [
             'player', 'year', 'card_set', 'card_number', 'sport', 'attributes', 
-            'grader', 'grade', 'parallel_variety', 'insert_set', 'autographed',
-            'autograph_auth', 'team', 'manufacturer', 'card_condition', 'card_type'
+            'grader', 'grade', 'parallel_variety', 'insert_set', 'autographed', 
+            'autograph_auth', 'team', 'manufacturer', 'card_condition', 'card_type', 'pricing_type'
         ]
         
         try:
