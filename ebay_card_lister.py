@@ -35,6 +35,7 @@ EBAY_CATEGORIES = {
     "football": "215",
     "hockey": "216",
     "soccer": "261328",
+    "wrestling": "261328",  # WWE cards use same category as trading cards
     "multi-sport": "217",
     "default": "261328"
 }
@@ -117,14 +118,22 @@ class CardLister:
         """Gathers card information from the user via prompts."""
         print("\n--- Enter Card Details ---")
         details = {
-            'player': input("Player Name: ").strip(),
-            'year': input("Year: ").strip(),
-            'card_set': input("Card Brand/Set (e.g., Topps Chrome): ").strip(),
-            'card_number': input("Card Number: ").strip(),
-            'sport': input("Sport (baseball, basketball, etc.): ").strip().lower(),
+            'player': input("Player/Athlete Name: ").strip(),
+            'year': input("Year/Season: ").strip(),
+            'card_set': input("Card Brand/Set (e.g., Topps Chrome, Panini Chronicles): ").strip(),
+            'card_number': input("Card Number (e.g., FX-JWD): ").strip(),
+            'sport': input("Sport (baseball, basketball, football, hockey, wrestling, etc.): ").strip().lower(),
             'attributes': input("Special Attributes (e.g., Rookie, RC, Auto, Refractor, /99): ").strip(),
             'grader': input("Grader (e.g., PSA, BGS, SGC) [leave blank if raw]: ").strip().upper(),
             'grade': input("Grade (e.g., 10, 9.5) [leave blank if raw]: ").strip(),
+            'parallel_variety': input("Parallel/Variety (e.g., Red Prizm, Gold, /99) [optional]: ").strip(),
+            'insert_set': input("Insert Set (e.g., Flux Auto Red) [optional]: ").strip(),
+            'autographed': input("Autographed (Yes/No) [optional]: ").strip().lower(),
+            'autograph_auth': input("Autograph Authentication (e.g., Panini Authentic) [optional]: ").strip(),
+            'team': input("Team/League (e.g., WWE, Lakers, Yankees) [optional]: ").strip(),
+            'manufacturer': input("Manufacturer (e.g., Panini, Topps, Upper Deck) [optional]: ").strip(),
+            'card_condition': input("Card Condition (Near Mint, Excellent, etc.) [optional]: ").strip(),
+            'card_type': input("Card Type (Standard, Jumbo, etc.) [optional]: ").strip(),
         }
         return details
     
@@ -308,8 +317,9 @@ class CardLister:
         return analysis
     
     def generate_item_specifics(self, details: Dict[str, str]) -> Dict[str, str]:
-        """Creates a dictionary of item specifics."""
+        """Creates a comprehensive dictionary of item specifics for eBay."""
         specifics = {
+            # Required fields
             "Player/Athlete": details['player'],
             "Year Manufactured": details['year'],
             "Set": details['card_set'],
@@ -319,19 +329,69 @@ class CardLister:
             "Graded": "Yes" if details['grader'] else "No",
         }
         
+        # Optional fields with high search volume
+        if details.get('manufacturer'):
+            specifics["Manufacturer"] = details['manufacturer']
+        
+        if details.get('parallel_variety'):
+            specifics["Parallel/Variety"] = details['parallel_variety']
+        
+        if details.get('team'):
+            specifics["Team"] = details['team']
+        
+        if details.get('insert_set'):
+            specifics["Insert Set"] = details['insert_set']
+        
+        # Grading information
         if details['grader']:
             specifics["Grader"] = details['grader']
-            specifics["Grade"] = details['grade']
+            if details['grade']:
+                specifics["Grade"] = details['grade']
         
+        # Autograph information
+        autographed = details.get('autographed', '').lower()
+        if autographed in ['yes', 'y', 'true'] or 'auto' in details['attributes'].lower():
+            specifics["Autographed"] = "Yes"
+            if details.get('autograph_auth'):
+                specifics["Autograph Authentication"] = details['autograph_auth']
+            if details['player']:
+                specifics["Signed By"] = details['player']
+        else:
+            specifics["Autographed"] = "No"
+        
+        # Features
         features = []
         if 'rookie' in details['attributes'].lower() or 'rc' in details['attributes'].lower():
             features.append("Rookie")
-        if 'auto' in details['attributes'].lower() or 'autograph' in details['attributes'].lower():
-            features.append("Autograph")
-            specifics["Autographed"] = "Yes"
+            specifics["Rookie"] = "Yes"
+        else:
+            specifics["Rookie"] = "No"
+        
+        if 'memorabilia' in details['attributes'].lower() or 'patch' in details['attributes'].lower():
+            features.append("Memorabilia")
+            specifics["Memorabilia"] = "Yes"
+        else:
+            specifics["Memorabilia"] = "No"
         
         if features:
             specifics["Features"] = ", ".join(features)
+        
+        # Condition information
+        if details.get('card_condition'):
+            specifics["Card Condition"] = details['card_condition']
+        
+        if details.get('card_type'):
+            specifics["Card Size"] = details['card_type']
+        
+        # Additional common fields
+        specifics["Country/Region of Manufacture"] = "United States"
+        specifics["Language"] = "English"
+        specifics["Card Thickness"] = "55 Pt."
+        specifics["Original/Licensed Reprint"] = "Original"
+        
+        # Sport-specific fields
+        if details['sport'] == 'wrestling':
+            specifics["League"] = "WWE"
         
         return specifics
     
@@ -364,7 +424,8 @@ class CardLister:
             'basketball': ', basketball card, NBA',
             'football': ', football card, NFL',
             'hockey': ', hockey card, NHL',
-            'soccer': ', soccer card, football card'
+            'soccer': ', soccer card, football card',
+            'wrestling': ', wrestling card, WWE card, WWE'
         }
         sport_keyword_suffix = sport_keywords.get(details['sport'], f', {sport_capitalized} card')
         
@@ -490,9 +551,10 @@ class CardLister:
         
         fieldnames = [
             'player', 'year', 'card_set', 'card_number', 'sport', 'attributes',
-            'grader', 'grade', 'title', 'title_length', 'optimization_score',
-            'category_id', 'category_name', 'tracking_sku', 'avg_price', 
-            'median_price', 'price_range', 'sales_count'
+            'grader', 'grade', 'parallel_variety', 'insert_set', 'autographed',
+            'autograph_auth', 'team', 'manufacturer', 'card_condition', 'card_type',
+            'title', 'title_length', 'optimization_score', 'category_id', 'category_name', 
+            'tracking_sku', 'avg_price', 'median_price', 'price_range', 'sales_count'
         ]
         
         try:
@@ -555,21 +617,41 @@ class CardLister:
                 'sport': 'basketball',
                 'attributes': 'Rookie RC',
                 'grader': 'PSA',
-                'grade': '10'
+                'grade': '10',
+                'parallel_variety': '',
+                'insert_set': '',
+                'autographed': '',
+                'autograph_auth': '',
+                'team': 'Chicago Bulls',
+                'manufacturer': 'Fleer',
+                'card_condition': 'Near Mint',
+                'card_type': 'Standard'
             },
             {
-                'player': 'Tom Brady',
-                'year': '2000',
-                'card_set': 'Topps Chrome',
-                'card_number': '236',
-                'sport': 'football',
-                'attributes': 'Rookie RC Refractor',
-                'grader': 'BGS',
-                'grade': '9.5'
+                'player': 'Joaquin Wilde',
+                'year': '2022',
+                'card_set': 'Panini Chronicles WWE',
+                'card_number': 'FX-JWD',
+                'sport': 'wrestling',
+                'attributes': 'Auto',
+                'grader': '',
+                'grade': '',
+                'parallel_variety': 'Red Prizm',
+                'insert_set': 'Flux Auto Red',
+                'autographed': 'Yes',
+                'autograph_auth': 'Panini Authentic',
+                'team': 'WWE',
+                'manufacturer': 'Panini',
+                'card_condition': 'Near Mint',
+                'card_type': 'Standard'
             }
         ]
         
-        fieldnames = ['player', 'year', 'card_set', 'card_number', 'sport', 'attributes', 'grader', 'grade']
+        fieldnames = [
+            'player', 'year', 'card_set', 'card_number', 'sport', 'attributes', 
+            'grader', 'grade', 'parallel_variety', 'insert_set', 'autographed',
+            'autograph_auth', 'team', 'manufacturer', 'card_condition', 'card_type'
+        ]
         
         try:
             with open(filename, 'w', newline='', encoding='utf-8') as csvfile:
