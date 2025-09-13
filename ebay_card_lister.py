@@ -40,6 +40,44 @@ EBAY_CATEGORIES = {
     "default": "261328"
 }
 
+# eBay Features field options (all 34 options)
+EBAY_FEATURES = {
+    "10th Anniversary Issue": ["10th", "anniversary"],
+    "1st Edition": ["1st edition", "first edition"],
+    "60th Anniversary Issue": ["60th", "anniversary"],
+    "65th Anniversary Issue": ["65th", "anniversary"],
+    "Base Set": ["base", "base set"],
+    "Box Topper": ["box topper", "topper"],
+    "Chase": ["chase"],
+    "Checklist": ["checklist"],
+    "Collectors Edition": ["collectors edition", "collector"],
+    "Digital": ["digital"],
+    "Embossed": ["embossed"],
+    "Exchange/Redemption": ["exchange", "redemption", "redeem"],
+    "Exclusive": ["exclusive"],
+    "Framed": ["framed"],
+    "Hologram": ["hologram", "holo"],
+    "Insert": ["insert"],
+    "Lenticular": ["lenticular"],
+    "Limited Edition": ["limited edition", "limited", "le"],
+    "Memorabilia": ["memorabilia", "mem", "patch", "jersey", "relic"],
+    "Miscut": ["miscut"],
+    "Misprint": ["misprint"],
+    "One of One": ["1/1", "one of one", "1of1"],
+    "Parallel/Variety": ["parallel", "variety", "prizm", "refractor", "gold", "silver", "rainbow"],
+    "Printing Plate": ["printing plate", "plate"],
+    "Promo": ["promo", "promotional"],
+    "Puzzle": ["puzzle"],
+    "Rookie": ["rookie", "rc"],
+    "Sell Sheet": ["sell sheet"],
+    "Serial Numbered": ["serial", "numbered", "/", "of"],
+    "Short Print": ["short print", "sp"],
+    "Sketch": ["sketch"],
+    "Stamped": ["stamped"],
+    "Sticker": ["sticker"],
+    "AU": ["auto", "autograph", "au", "signed", "signature"]
+}
+
 # User agents for web scraping
 USER_AGENTS = [
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
@@ -260,6 +298,47 @@ class CardLister:
         
         return analysis
     
+    def detect_features(self, details: Dict[str, str]) -> List[str]:
+        """Detect eBay features from card attributes and details."""
+        detected_features = []
+        attributes_text = details.get('attributes', '').lower()
+        parallel_variety = details.get('parallel_variety', '').lower()
+        insert_set = details.get('insert_set', '').lower()
+        
+        # Combine all text for feature detection
+        search_text = f"{attributes_text} {parallel_variety} {insert_set}".lower()
+        
+        # Check each eBay feature
+        for feature_name, keywords in EBAY_FEATURES.items():
+            for keyword in keywords:
+                if keyword in search_text:
+                    if feature_name not in detected_features:
+                        detected_features.append(feature_name)
+                    break
+        
+        # Special handling for serial numbered cards
+        if any(char in search_text for char in ['/', 'of']) and 'serial' not in search_text:
+            # Check if it looks like a serial number (e.g., "25/99", "1/1")
+            import re
+            serial_pattern = r'\d+/\d+'
+            if re.search(serial_pattern, search_text):
+                if "Serial Numbered" not in detected_features:
+                    detected_features.append("Serial Numbered")
+        
+        # Special handling for memorabilia
+        mem_keywords = ['patch', 'jersey', 'relic', 'memorabilia', 'mem']
+        if any(keyword in search_text for keyword in mem_keywords):
+            if "Memorabilia" not in detected_features:
+                detected_features.append("Memorabilia")
+        
+        # Special handling for autographs
+        auto_keywords = ['auto', 'autograph', 'au', 'signed', 'signature']
+        if any(keyword in search_text for keyword in auto_keywords):
+            if "AU" not in detected_features:
+                detected_features.append("AU")
+        
+        return detected_features
+    
     def suggest_category(self, sport: str) -> Tuple[str, str]:
         """Suggests an eBay category ID based on the sport."""
         category_id = EBAY_CATEGORIES.get(sport, EBAY_CATEGORIES["default"])
@@ -359,22 +438,18 @@ class CardLister:
         else:
             specifics["Autographed"] = "No"
         
-        # Features
-        features = []
-        if 'rookie' in details['attributes'].lower() or 'rc' in details['attributes'].lower():
-            features.append("Rookie")
-            specifics["Rookie"] = "Yes"
-        else:
-            specifics["Rookie"] = "No"
+        # Features - Use comprehensive detection
+        detected_features = self.detect_features(details)
         
-        if 'memorabilia' in details['attributes'].lower() or 'patch' in details['attributes'].lower():
-            features.append("Memorabilia")
-            specifics["Memorabilia"] = "Yes"
-        else:
-            specifics["Memorabilia"] = "No"
+        # Set individual feature fields
+        specifics["Rookie"] = "Yes" if "Rookie" in detected_features else "No"
+        specifics["Memorabilia"] = "Yes" if "Memorabilia" in detected_features else "No"
         
-        if features:
-            specifics["Features"] = ", ".join(features)
+        # Set the main Features field with all detected features
+        if detected_features:
+            specifics["Features"] = ", ".join(detected_features)
+        else:
+            specifics["Features"] = "Base Set"  # Default if no features detected
         
         # Condition information
         if details.get('card_condition'):
@@ -641,6 +716,24 @@ class CardLister:
                 'autographed': 'Yes',
                 'autograph_auth': 'Panini Authentic',
                 'team': 'WWE',
+                'manufacturer': 'Panini',
+                'card_condition': 'Near Mint',
+                'card_type': 'Standard'
+            },
+            {
+                'player': 'LeBron James',
+                'year': '2023',
+                'card_set': 'Panini Prizm',
+                'card_number': '1',
+                'sport': 'basketball',
+                'attributes': 'Rookie RC Patch Auto /25',
+                'grader': 'PSA',
+                'grade': '9',
+                'parallel_variety': 'Gold Refractor',
+                'insert_set': 'Rookie Patch Auto',
+                'autographed': 'Yes',
+                'autograph_auth': 'Panini Authentic',
+                'team': 'Lakers',
                 'manufacturer': 'Panini',
                 'card_condition': 'Near Mint',
                 'card_type': 'Standard'
