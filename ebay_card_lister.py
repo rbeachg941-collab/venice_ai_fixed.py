@@ -102,6 +102,9 @@ EBAY_ORIGINAL_REPRINT = {
     "Licensed Reprint": ["reprint", "licensed reprint", "reproduction", "copy"]
 }
 
+# Vintage detection criteria
+VINTAGE_YEAR_CUTOFF = 1990  # Cards from 1990 and earlier are considered vintage
+
 # User agents for web scraping
 USER_AGENTS = [
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
@@ -391,6 +394,14 @@ class CardLister:
         # Default to Original for most cards
         return "Original"
     
+    def detect_vintage_status(self, details: Dict[str, str]) -> str:
+        """Detect if card is vintage based on year."""
+        try:
+            year = int(details.get('year', '0'))
+            return "Yes" if year <= VINTAGE_YEAR_CUTOFF else "No"
+        except (ValueError, TypeError):
+            return "No"
+    
     def suggest_category(self, sport: str) -> Tuple[str, str]:
         """Suggests an eBay category ID based on the sport."""
         category_id = EBAY_CATEGORIES.get(sport, EBAY_CATEGORIES["default"])
@@ -510,11 +521,12 @@ class CardLister:
         if details.get('card_type'):
             specifics["Card Size"] = details['card_type']
         
-        # Additional common fields
+        # Additional common fields with intelligent detection
         specifics["Country/Region of Manufacture"] = "United States"
         specifics["Language"] = "English"
-        specifics["Card Thickness"] = "55 Pt."
-        specifics["Original/Licensed Reprint"] = "Original"
+        specifics["Card Thickness"] = self.detect_card_thickness(details)
+        specifics["Original/Licensed Reprint"] = self.detect_original_reprint(details)
+        specifics["Vintage"] = self.detect_vintage_status(details)
         
         # Sport-specific fields
         if details['sport'] == 'wrestling':
