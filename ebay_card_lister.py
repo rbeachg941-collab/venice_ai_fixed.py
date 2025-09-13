@@ -128,6 +128,13 @@ EBAY_AUTOGRAPH_AUTH = {
     "Upper Deck": ["upper deck", "upperdeck"]
 }
 
+# eBay Autograph Format options (all 3 options)
+EBAY_AUTOGRAPH_FORMAT = {
+    "Cut": ["cut", "cut signature"],
+    "Hard Signed": ["hard signed", "hard", "on-card", "on card"],
+    "Label or Sticker": ["label", "sticker", "authentication sticker", "auth sticker"]
+}
+
 # Country/Region mapping based on manufacturer
 MANUFACTURER_COUNTRIES = {
     "Panini": "Italy",
@@ -467,6 +474,20 @@ class CardLister:
         # Default to United States
         return MANUFACTURER_COUNTRIES["default"]
     
+    def detect_autograph_format(self, details: Dict[str, str]) -> str:
+        """Detect autograph format from card details."""
+        # Combine all text for format detection
+        search_text = f"{details.get('attributes', '')} {details.get('parallel_variety', '')} {details.get('insert_set', '')}".lower()
+        
+        # Check each format option
+        for format_type, keywords in EBAY_AUTOGRAPH_FORMAT.items():
+            for keyword in keywords:
+                if keyword in search_text:
+                    return format_type
+        
+        # Default to Label or Sticker for most modern cards
+        return "Label or Sticker"
+    
     def suggest_category(self, sport: str) -> Tuple[str, str]:
         """Suggests an eBay category ID based on the sport."""
         category_id = EBAY_CATEGORIES.get(sport, EBAY_CATEGORIES["default"])
@@ -560,6 +581,7 @@ class CardLister:
         if autographed in ['yes', 'y', 'true'] or 'auto' in details['attributes'].lower():
             specifics["Autographed"] = "Yes"
             specifics["Autograph Authentication"] = self.detect_autograph_auth(details)
+            specifics["Autograph Format"] = self.detect_autograph_format(details)
             if details['player']:
                 specifics["Signed By"] = details['player']
         else:
@@ -586,7 +608,7 @@ class CardLister:
             specifics["Card Size"] = details['card_type']
         
         # Additional common fields with intelligent detection
-        specifics["Country/Region of Manufacture"] = "United States"
+        specifics["Country/Region of Manufacture"] = self.detect_country_region(details)
         specifics["Language"] = "English"
         specifics["Card Thickness"] = self.detect_card_thickness(details)
         specifics["Original/Licensed Reprint"] = self.detect_original_reprint(details)
