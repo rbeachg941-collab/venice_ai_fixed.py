@@ -775,6 +775,7 @@ class CardLister:
             'card_condition': input("Card Condition (Near Mint, Excellent, etc.) [optional]: ").strip(),
             'card_type': input("Card Type (Standard, Jumbo, etc.) [optional]: ").strip(),
             'pricing_type': input("Pricing Type (Auction, Buy It Now) [optional]: ").strip(),
+            'allow_offers': input("Allow Offers (Yes/No) [optional]: ").strip(),
         }
         return details
     
@@ -1156,6 +1157,28 @@ class CardLister:
         
         return None
 
+    def detect_allow_offers(self, details):
+        """Detect allow offers setting from card details."""
+        allow_offers_input = details.get('allow_offers', '').lower()
+        if not allow_offers_input:
+            return None
+        
+        # eBay Allow Offers options
+        offers_mapping = {
+            'yes': 'Yes',
+            'y': 'Yes',
+            'true': 'Yes',
+            'no': 'No',
+            'n': 'No',
+            'false': 'No'
+        }
+        
+        # Direct match
+        if allow_offers_input in offers_mapping:
+            return offers_mapping[allow_offers_input]
+        
+        return None
+
     def suggest_category(self, sport: str) -> Tuple[str, str]:
         """Suggests an eBay category ID based on the sport."""
         detected_sport = self.detect_sport(sport)
@@ -1289,6 +1312,11 @@ class CardLister:
         detected_pricing = self.detect_pricing_type(details)
         if detected_pricing:
             specifics["Pricing"] = detected_pricing
+
+        # Allow Offers
+        detected_offers = self.detect_allow_offers(details)
+        if detected_offers:
+            specifics["Allow Offers"] = detected_offers
         
         # Additional common fields with intelligent detection
         specifics["Country/Region of Manufacture"] = self.detect_country_region(details)
@@ -1534,7 +1562,8 @@ class CardLister:
                 'manufacturer': 'Fleer',
                 'card_condition': 'Near Mint',
                 'card_type': 'Standard',
-                'pricing_type': 'Buy It Now'
+                'pricing_type': 'Buy It Now',
+                'allow_offers': 'Yes'
             },
             {
                 'player': 'Joaquin Wilde',
@@ -1553,7 +1582,8 @@ class CardLister:
                 'manufacturer': 'Panini',
                 'card_condition': 'Near Mint',
                 'card_type': 'Standard',
-                'pricing_type': 'Auction'
+                'pricing_type': 'Auction',
+                'allow_offers': 'No'
             },
             {
                 'player': 'LeBron James',
@@ -1572,14 +1602,15 @@ class CardLister:
                 'manufacturer': 'Panini',
                 'card_condition': 'Near Mint',
                 'card_type': 'Standard',
-                'pricing_type': 'Buy It Now'
+                'pricing_type': 'Buy It Now',
+                'allow_offers': 'Yes'
             }
         ]
         
         fieldnames = [
             'player', 'year', 'card_set', 'card_number', 'sport', 'attributes', 
             'grader', 'grade', 'parallel_variety', 'insert_set', 'autographed', 
-            'autograph_auth', 'team', 'manufacturer', 'card_condition', 'card_type', 'pricing_type'
+            'autograph_auth', 'team', 'manufacturer', 'card_condition', 'card_type', 'pricing_type', 'allow_offers'
         ]
         
         try:
