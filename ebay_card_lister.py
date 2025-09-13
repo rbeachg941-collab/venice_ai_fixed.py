@@ -1189,6 +1189,23 @@ class CardLister:
         # Default to trading card singles for all other sports cards
         return "Sports Mem, Cards & Fan Shop>Sports Trading Cards>Trading Card Singles"
 
+    def detect_store_category(self, details):
+        """Detect store category based on card details."""
+        sport = details.get('sport', '').lower()
+        team = details.get('team', '').lower()
+        
+        # Check for wrestling categories
+        if sport == 'wrestling':
+            if 'aew' in team or 'all elite' in team:
+                return "AEW"
+            elif 'wwe' in team or 'world wrestling' in team:
+                return "WWE"
+            else:
+                return "Other"
+        
+        # For non-wrestling sports, default to "All categories"
+        return "All categories"
+
     def suggest_category(self, sport: str) -> Tuple[str, str]:
         """Suggests an eBay category ID based on the sport."""
         detected_sport = self.detect_sport(sport)
@@ -1332,6 +1349,11 @@ class CardLister:
         detected_category = self.detect_item_category(details)
         if detected_category:
             specifics["Item Category"] = detected_category
+
+        # Store Category
+        detected_store_category = self.detect_store_category(details)
+        if detected_store_category:
+            specifics["Store Category"] = detected_store_category
         
         # Additional common fields with intelligent detection
         specifics["Country/Region of Manufacture"] = self.detect_country_region(details)
@@ -1504,8 +1526,9 @@ class CardLister:
             'player', 'year', 'card_set', 'card_number', 'sport', 'attributes',
             'grader', 'grade', 'parallel_variety', 'insert_set', 'autographed',
             'autograph_auth', 'team', 'manufacturer', 'card_condition', 'card_type',
-            'title', 'title_length', 'optimization_score', 'category_id', 'category_name', 
-            'tracking_sku', 'avg_price', 'median_price', 'price_range', 'sales_count'
+            'pricing_type', 'allow_offers', 'title', 'title_length', 'optimization_score', 
+            'category_id', 'category_name', 'tracking_sku', 'avg_price', 'median_price', 
+            'price_range', 'sales_count'
         ]
         
         try:
