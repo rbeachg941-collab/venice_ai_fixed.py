@@ -1179,6 +1179,16 @@ class CardLister:
         
         return None
 
+    def detect_item_category(self, details):
+        """Detect item category based on card details."""
+        # Check if it's an autographed wrestling card
+        if (details.get('sport', '').lower() == 'wrestling' and 
+            details.get('autographed', '').lower() in ['yes', 'y', 'true']):
+            return "Sports Mem, Cards & Fan Shop > Autographs-Original > Wrestling > Other Autographed Wrestling"
+        
+        # Default to trading card singles for all other sports cards
+        return "Sports Mem, Cards & Fan Shop>Sports Trading Cards>Trading Card Singles"
+
     def suggest_category(self, sport: str) -> Tuple[str, str]:
         """Suggests an eBay category ID based on the sport."""
         detected_sport = self.detect_sport(sport)
@@ -1317,6 +1327,11 @@ class CardLister:
         detected_offers = self.detect_allow_offers(details)
         if detected_offers:
             specifics["Allow Offers"] = detected_offers
+
+        # Item Category
+        detected_category = self.detect_item_category(details)
+        if detected_category:
+            specifics["Item Category"] = detected_category
         
         # Additional common fields with intelligent detection
         specifics["Country/Region of Manufacture"] = self.detect_country_region(details)
