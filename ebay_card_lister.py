@@ -105,6 +105,46 @@ EBAY_ORIGINAL_REPRINT = {
 # Vintage detection criteria
 VINTAGE_YEAR_CUTOFF = 1990  # Cards from 1990 and earlier are considered vintage
 
+# eBay Autograph Authentication options (all 19 options)
+EBAY_AUTOGRAPH_AUTH = {
+    "Beckett Authentication Services (BAS)": ["beckett", "bas", "beckett authentication"],
+    "Bowman": ["bowman"],
+    "Certified Guaranty Company (CGC)": ["cgc", "certified guaranty"],
+    "Certified Sports Guaranty (CSG)": ["csg", "certified sports"],
+    "Donruss": ["donruss"],
+    "Fanatics Authentic": ["fanatics", "fanatics authentic"],
+    "Fleer": ["fleer"],
+    "James Spence Authentication (JSA)": ["jsa", "james spence", "spence"],
+    "Leaf": ["leaf"],
+    "Panini Authentic": ["panini", "panini authentic"],
+    "Professional Sports Authenticator (PSA)": ["psa", "professional sports"],
+    "PROVA Group": ["prova", "prova group"],
+    "Score": ["score"],
+    "Sportscard Guaranty Corporation (SGC)": ["sgc", "sportscard guaranty"],
+    "Sports Memorabilia": ["sports memorabilia"],
+    "Steiner Sports": ["steiner", "steiner sports"],
+    "Topps": ["topps"],
+    "TRISTAR Productions": ["tristar", "tristar productions"],
+    "Upper Deck": ["upper deck", "upperdeck"]
+}
+
+# Country/Region mapping based on manufacturer
+MANUFACTURER_COUNTRIES = {
+    "Panini": "Italy",
+    "Topps": "United States", 
+    "Upper Deck": "United States",
+    "Fleer": "United States",
+    "Donruss": "United States",
+    "Leaf": "United States",
+    "Bowman": "United States",
+    "Score": "United States",
+    "Beckett": "United States",
+    "PSA": "United States",
+    "BGS": "United States",
+    "SGC": "United States",
+    "default": "United States"
+}
+
 # User agents for web scraping
 USER_AGENTS = [
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
@@ -402,6 +442,31 @@ class CardLister:
         except (ValueError, TypeError):
             return "No"
     
+    def detect_autograph_auth(self, details: Dict[str, str]) -> str:
+        """Detect autograph authentication service from card details."""
+        auth_input = details.get('autograph_auth', '').lower()
+        
+        # Check each authentication service
+        for auth_service, keywords in EBAY_AUTOGRAPH_AUTH.items():
+            for keyword in keywords:
+                if keyword in auth_input:
+                    return auth_service
+        
+        # Default to Panini Authentic if no match found
+        return "Panini Authentic"
+    
+    def detect_country_region(self, details: Dict[str, str]) -> str:
+        """Detect country/region of manufacture based on manufacturer."""
+        manufacturer = details.get('manufacturer', '').title()
+        
+        # Check manufacturer mapping
+        for mfg, country in MANUFACTURER_COUNTRIES.items():
+            if mfg.lower() in manufacturer.lower():
+                return country
+        
+        # Default to United States
+        return MANUFACTURER_COUNTRIES["default"]
+    
     def suggest_category(self, sport: str) -> Tuple[str, str]:
         """Suggests an eBay category ID based on the sport."""
         category_id = EBAY_CATEGORIES.get(sport, EBAY_CATEGORIES["default"])
@@ -494,8 +559,7 @@ class CardLister:
         autographed = details.get('autographed', '').lower()
         if autographed in ['yes', 'y', 'true'] or 'auto' in details['attributes'].lower():
             specifics["Autographed"] = "Yes"
-            if details.get('autograph_auth'):
-                specifics["Autograph Authentication"] = details['autograph_auth']
+            specifics["Autograph Authentication"] = self.detect_autograph_auth(details)
             if details['player']:
                 specifics["Signed By"] = details['player']
         else:
