@@ -135,6 +135,83 @@ EBAY_AUTOGRAPH_FORMAT = {
     "Label or Sticker": ["label", "sticker", "authentication sticker", "auth sticker"]
 }
 
+# Major Parallel/Variety options (most common from the 783 options)
+MAJOR_PARALLEL_VARIETIES = {
+    # Base and Common
+    "[Base]": ["base", "base card"],
+    
+    # Color-based parallels
+    "Black": ["black"],
+    "Blue": ["blue"],
+    "Gold": ["gold"],
+    "Green": ["green"],
+    "Orange": ["orange"],
+    "Pink": ["pink"],
+    "Purple": ["purple"],
+    "Red": ["red"],
+    "Silver": ["silver"],
+    "White": ["white"],
+    "Yellow": ["yellow"],
+    
+    # Refractor types
+    "Refractor": ["refractor"],
+    "Black Refractor": ["black refractor"],
+    "Blue Refractor": ["blue refractor"],
+    "Gold Refractor": ["gold refractor"],
+    "Green Refractor": ["green refractor"],
+    "Orange Refractor": ["orange refractor"],
+    "Pink Refractor": ["pink refractor"],
+    "Purple Refractor": ["purple refractor"],
+    "Red Refractor": ["red refractor"],
+    "Silver Refractor": ["silver refractor"],
+    "White Refractor": ["white refractor"],
+    
+    # Prizm types
+    "Prizm": ["prizm"],
+    "Black Prizm": ["black prizm"],
+    "Blue Prizm": ["blue prizm"],
+    "Gold Prizm": ["gold prizm"],
+    "Green Prizm": ["green prizm"],
+    "Orange Prizm": ["orange prizm"],
+    "Pink Prizm": ["pink prizm"],
+    "Purple Prizm": ["purple prizm"],
+    "Red Prizm": ["red prizm"],
+    "Silver Prizm": ["silver prizm"],
+    "White Prizm": ["white prizm"],
+    
+    # Special finishes
+    "Cracked Ice": ["cracked ice"],
+    "Disco": ["disco"],
+    "Holographic": ["holographic", "holo"],
+    "Rainbow": ["rainbow"],
+    "Shimmer": ["shimmer"],
+    "Spectrum": ["spectrum"],
+    
+    # Numbered parallels
+    "Serial Numbered": ["/", "of", "numbered", "serial"],
+    
+    # Special editions
+    "1st Edition": ["1st edition", "first edition"],
+    "Limited Edition": ["limited edition", "limited"],
+    "Chrome": ["chrome"],
+    "Finite": ["finite"],
+    "Prime": ["prime"],
+    "Mojo": ["mojo"],
+    "Mosaic": ["mosaic"],
+    "Pulsar": ["pulsar"],
+    "Wave": ["wave"],
+    
+    # Insert sets (common ones)
+    "Flux Auto Red": ["flux auto red"],
+    "Flux Auto": ["flux auto"],
+    "Flux": ["flux"],
+    "Auto": ["auto", "autograph"],
+    "Patch": ["patch"],
+    "Memorabilia": ["memorabilia", "mem", "relic"],
+    "Jersey": ["jersey"],
+    "Rookie": ["rookie", "rc"]
+}
+
 # Country/Region mapping based on manufacturer
 MANUFACTURER_COUNTRIES = {
     "Panini": "Italy",
@@ -488,6 +565,24 @@ class CardLister:
         # Default to Label or Sticker for most modern cards
         return "Label or Sticker"
     
+    def detect_parallel_variety(self, details: Dict[str, str]) -> str:
+        """Detect parallel/variety from card details."""
+        # Combine all text for parallel detection
+        search_text = f"{details.get('attributes', '')} {details.get('parallel_variety', '')} {details.get('insert_set', '')}".lower()
+        
+        # Check each parallel option (prioritize more specific matches first)
+        for parallel_name, keywords in MAJOR_PARALLEL_VARIETIES.items():
+            for keyword in keywords:
+                if keyword in search_text:
+                    return parallel_name
+        
+        # If no specific parallel detected, check if it's a base card
+        if not details.get('parallel_variety') and not details.get('insert_set'):
+            return "[Base]"
+        
+        # Default to the user input if provided
+        return details.get('parallel_variety', '[Base]')
+    
     def suggest_category(self, sport: str) -> Tuple[str, str]:
         """Suggests an eBay category ID based on the sport."""
         category_id = EBAY_CATEGORIES.get(sport, EBAY_CATEGORIES["default"])
@@ -561,8 +656,10 @@ class CardLister:
         if details.get('manufacturer'):
             specifics["Manufacturer"] = details['manufacturer']
         
-        if details.get('parallel_variety'):
-            specifics["Parallel/Variety"] = details['parallel_variety']
+        # Use intelligent parallel/variety detection
+        detected_parallel = self.detect_parallel_variety(details)
+        if detected_parallel and detected_parallel != "[Base]":
+            specifics["Parallel/Variety"] = detected_parallel
         
         if details.get('team'):
             specifics["Team"] = details['team']
