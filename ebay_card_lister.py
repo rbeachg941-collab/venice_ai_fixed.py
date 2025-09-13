@@ -96,6 +96,12 @@ EBAY_CARD_THICKNESS = {
     "360 Pt.": ["360pt", "360 pt", "maximum thick"]
 }
 
+# eBay Original/Licensed Reprint options
+EBAY_ORIGINAL_REPRINT = {
+    "Original": ["original", "authentic", "genuine", "real"],
+    "Licensed Reprint": ["reprint", "licensed reprint", "reproduction", "copy"]
+}
+
 # User agents for web scraping
 USER_AGENTS = [
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
@@ -356,6 +362,34 @@ class CardLister:
                 detected_features.append("AU")
         
         return detected_features
+    
+    def detect_card_thickness(self, details: Dict[str, str]) -> str:
+        """Detect card thickness from card details."""
+        # Combine all text for thickness detection
+        search_text = f"{details.get('attributes', '')} {details.get('parallel_variety', '')} {details.get('insert_set', '')} {details.get('card_type', '')}".lower()
+        
+        # Check each thickness option
+        for thickness, keywords in EBAY_CARD_THICKNESS.items():
+            for keyword in keywords:
+                if keyword in search_text:
+                    return thickness
+        
+        # Default to 55 Pt. for standard cards
+        return "55 Pt."
+    
+    def detect_original_reprint(self, details: Dict[str, str]) -> str:
+        """Detect if card is original or licensed reprint."""
+        # Combine all text for detection
+        search_text = f"{details.get('attributes', '')} {details.get('card_set', '')} {details.get('parallel_variety', '')}".lower()
+        
+        # Check for reprint indicators first
+        for reprint_type, keywords in EBAY_ORIGINAL_REPRINT.items():
+            for keyword in keywords:
+                if keyword in search_text:
+                    return reprint_type
+        
+        # Default to Original for most cards
+        return "Original"
     
     def suggest_category(self, sport: str) -> Tuple[str, str]:
         """Suggests an eBay category ID based on the sport."""
