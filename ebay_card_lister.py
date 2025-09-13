@@ -689,12 +689,35 @@ HTML_TEMPLATE = """
             {authenticity_text} Please examine the high-resolution photos carefully as they show the exact card you will receive.
         </p>
         
-        <h2 style="border-bottom: 2px solid #eee; padding-bottom: 5px; color: #333;">Professional Shipping & Protection</h2>
+        <h2 style="border-bottom: 2px solid #eee; padding-bottom: 5px; color: #333;">Shipping & Store Policies</h2>
+        
+        <p><strong>Flat Rate Shipping:</strong><br>
+        All U.S. orders ship at one flat rate! Enjoy free shipping on all additional cards when you use the shopping cart and complete your purchase in a single transaction.</p>
+        
+        <p><strong>Card Variations:</strong><br>
+        When selling multiple copies of the same card with different patches, serial numbers, etc., please note that the photo may not depict the exact card you receive. Rest assured, the card you receive will match the described condition and type.</p>
+        
+        <p><strong>Customer Service:</strong><br>
+        For any inquiries, please contact us through eBay messages. We are here to help and respond promptly.</p>
+        
+        <p><strong>Shipping Schedule:</strong><br>
+        We ship Monday through Saturday, ensuring that your order goes out within 1 business day of purchase via USPS mail.</p>
+        
+        <h2 style="border-bottom: 2px solid #eee; padding-bottom: 5px; color: #333;">FAQs</h2>
+        
+        <p><strong>Card Condition:</strong><br>
+        All of our cards are in near mint to mint condition. We offer a 30-day money-back guarantee if you're not fully satisfied with your order.</p>
+        
+        <p><strong>Combined Shipping:</strong><br>
+        We offer free shipping on all domestic orders for an unlimited number of cards in a single transaction.</p>
+        
+        <p><strong>Shipping:</strong><br>
+        Your order will be shipped within 1 business day of purchase via USPS mail.</p>
+        
+        <h2 style="border-bottom: 2px solid #eee; padding-bottom: 5px; color: #333;">Professional Protection</h2>
         <p>
             <strong>Secure Packaging:</strong> Your {player} card will be shipped in a penny sleeve, top loader, and team bag for maximum protection.
             <br><strong>Shipping Method:</strong> eBay Standard Envelope for cards under $20 or USPS Ground Advantage for cards over $20.
-            <br><strong>Combined Shipping:</strong> Available for multiple card purchases. Please message us before payment.
-            <br><strong>Fast Processing:</strong> Cards ship within 1-2 business days of payment.
         </p>
         
         <h2 style="border-bottom: 2px solid #eee; padding-bottom: 5px; color: #333;">Why Choose This Listing?</h2>
@@ -1073,6 +1096,39 @@ class CardLister:
         # Default fallback
         return event_input.title()
 
+    def detect_card_condition_ebay(self, details):
+        """Map user input to eBay's Card Condition options."""
+        condition_input = details.get('card_condition', '').lower()
+        if not condition_input:
+            return None
+        
+        # eBay Card Condition options
+        condition_mapping = {
+            'near mint': 'Near mint or better: Comparable to a fresh pack',
+            'near mint or better': 'Near mint or better: Comparable to a fresh pack',
+            'nm': 'Near mint or better: Comparable to a fresh pack',
+            'nm-mt': 'Near mint or better: Comparable to a fresh pack',
+            'mint': 'Near mint or better: Comparable to a fresh pack',
+            'excellent': 'Excellent: Has clearly visible signs of wear',
+            'ex': 'Excellent: Has clearly visible signs of wear',
+            'very good': 'Very good: Has moderate-to-heavy damage all over',
+            'vg': 'Very good: Has moderate-to-heavy damage all over',
+            'good': 'Very good: Has moderate-to-heavy damage all over',
+            'poor': 'Poor: Is extremely worn and displays flaws all over',
+            'fair': 'Poor: Is extremely worn and displays flaws all over'
+        }
+        
+        # Direct match
+        if condition_input in condition_mapping:
+            return condition_mapping[condition_input]
+        
+        # Partial match
+        for keyword, ebay_condition in condition_mapping.items():
+            if keyword in condition_input:
+                return ebay_condition
+        
+        return None
+
     def suggest_category(self, sport: str) -> Tuple[str, str]:
         """Suggests an eBay category ID based on the sport."""
         detected_sport = self.detect_sport(sport)
@@ -1189,8 +1245,9 @@ class CardLister:
             specifics["Features"] = "Base Set"  # Default if no features detected
         
         # Condition information
-        if details.get('card_condition'):
-            specifics["Card Condition"] = details['card_condition']
+        detected_condition = self.detect_card_condition_ebay(details)
+        if detected_condition:
+            specifics["Card Condition"] = detected_condition
 
         if details.get('card_type'):
             specifics["Card Size"] = details['card_type']
