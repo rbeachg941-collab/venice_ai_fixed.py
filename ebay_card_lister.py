@@ -1191,9 +1191,15 @@ class CardLister:
         # Condition information
         if details.get('card_condition'):
             specifics["Card Condition"] = details['card_condition']
-        
+
         if details.get('card_type'):
             specifics["Card Size"] = details['card_type']
+
+        # Condition Type - Graded vs Ungraded
+        if details.get('grader') and details.get('grade'):
+            specifics["Condition Type"] = "Graded: Professionally graded"
+        else:
+            specifics["Condition Type"] = "Ungraded: Not in original packaging or professionally graded"
         
         # Additional common fields with intelligent detection
         specifics["Country/Region of Manufacture"] = self.detect_country_region(details)
