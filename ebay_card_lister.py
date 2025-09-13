@@ -238,6 +238,117 @@ EBAY_ORIGINAL_REPRINT = {
 # Vintage detection criteria
 VINTAGE_YEAR_CUTOFF = 1990  # Cards from 1990 and earlier are considered vintage
 
+# eBay Event/Tournament options (major tournaments)
+EBAY_EVENTS_TOURNAMENTS = {
+    "Olympic Games": ["olympic", "olympics"],
+    "Summer Olympics": ["summer olympic", "summer olympics"],
+    "Winter Olympics": ["winter olympic", "winter olympics"],
+    "FIFA World Cup": ["fifa world cup", "world cup"],
+    "FIFA Women's World Cup": ["fifa women's world cup", "women's world cup"],
+    "Super Bowl": ["super bowl"],
+    "NBA Finals": ["nba finals", "nba championship"],
+    "WNBA Finals": ["wnba finals", "wnba championship"],
+    "MLB World Series": ["mlb world series", "world series"],
+    "Stanley Cup Finals": ["stanley cup", "stanley cup finals"],
+    "UEFA European Football Championship": ["uefa", "european championship"],
+    "UEFA European Women's Championship": ["uefa women's", "european women's championship"],
+    "CONCACAF Gold Cup": ["concacaf gold cup", "gold cup"],
+    "CONCACAF Women's Championship": ["concacaf women's"],
+    "Rugby World Cup": ["rugby world cup"],
+    "Rugby League World Cup": ["rugby league world cup"],
+    "Rugby World Cup Sevens": ["rugby world cup sevens"],
+    "Women's Rugby World Cup": ["women's rugby world cup"],
+    "Women's Rugby League World Cup": ["women's rugby league world cup"],
+    "Cricket World Cup": ["cricket world cup"],
+    "Men's Cricket World Cup": ["men's cricket world cup"],
+    "Men's CricketT20 World Cup": ["men's cricket t20", "t20 world cup"],
+    "Cricket Champions Trophy": ["cricket champions trophy"],
+    "Cricket Champions League Twenty20": ["cricket champions league"],
+    "Indoor Cricket World Cup": ["indoor cricket world cup"],
+    "Masters World Series of Indoor Cricket": ["masters world series"],
+    "Baseball World Cup": ["baseball world cup"],
+    "Baseball Premier12": ["baseball premier12", "premier12"],
+    "World Baseball Classic": ["world baseball classic", "wbc"],
+    "Carribean World Series": ["caribbean world series"],
+    "Japan Series": ["japan series"],
+    "Serie del Rey": ["serie del rey"],
+    "Basketball Men's World Cup": ["basketball men's world cup"],
+    "Basketball Women's World Cup": ["basketball women's world cup"],
+    "Basketball Men's Diamond Ball": ["basketball men's diamond ball"],
+    "Basketball Women's Diamond Ball": ["basketball women's diamond ball"],
+    "EuroBasket": ["eurobasket"],
+    "Basketball AfroBasket": ["basketball afrobasket", "afrobasket"],
+    "Basketball AmeriCup": ["basketball americup", "americup"],
+    "Basketball Asia Cup": ["basketball asia cup", "asia cup"],
+    "Basketball Oceania Championship": ["basketball oceania"],
+    "Basketball South American Championship": ["basketball south american"],
+    "Ice Hockey World Championships": ["ice hockey world championships"],
+    "Volleyball Men's World Championship": ["volleyball men's world championship"],
+    "Volleyball Women's World Cup": ["volleyball women's world cup"],
+    "Volleyball Men's Nations League": ["volleyball men's nations league"],
+    "Volleyball Women's Nations League": ["volleyball women's nations league"],
+    "Volleyball World Grand Prix": ["volleyball world grand prix"],
+    "Volleyball World League": ["volleyball world league"],
+    "Men's European Volleyball Championship": ["men's european volleyball"],
+    "Women's European Volleyball Championship": ["women's european volleyball"],
+    "Beach Volley World Championships": ["beach volley world championships"],
+    "Artistic Gymnastics World Championships": ["artistic gymnastics world championships"],
+    "Rhythmic Gymnastics World Championships": ["rhythmic gymnastics world championships"],
+    "Acrobatic Gymnastics World Championships": ["acrobatic gymnastics world championships"],
+    "Aerobic Gymnastics World Championships": ["aerobic gymnastics world championships"],
+    "Trampoline & Tumbling Gymnastics World Championships": ["trampoline gymnastics world championships"],
+    "World Aesthetic Group Gymnastics Championships": ["world aesthetic group gymnastics"],
+    "European Women's Gymnastics Championships": ["european women's gymnastics"],
+    "European Women's Individual Gymnastics Championships": ["european women's individual gymnastics"],
+    "Asian Gymnastics Championships": ["asian gymnastics championships"],
+    "South American Gymnastics Championships": ["south american gymnastics"],
+    "African Artistic Gymnastics Championship": ["african artistic gymnastics"],
+    "All-Japan Artistic Gymnastics Championships": ["all-japan artistic gymnastics"],
+    "Gymnastic American Cup": ["gymnastic american cup"],
+    "Gymnastic U.S. Classic": ["gymnastic u.s. classic"],
+    "Rhythmic Gymnastics European Championships": ["rhythmic gymnastics european"],
+    "Pacific Rim Championships": ["pacific rim championships"],
+    "World Fencing Championships": ["world fencing championships"],
+    "European Fencing Championships": ["european fencing championships"],
+    "Asian Fencing Championships": ["asian fencing championships"],
+    "African Fencing Championships": ["african fencing championships"],
+    "Pan American Fencing Championships": ["pan american fencing"],
+    "International Fencing Championships": ["international fencing"],
+    "World Wrestling Championship": ["world wrestling championship"],
+    "Cheerleading World Championships": ["cheerleading world championships"],
+    "ICU World Cheerleading Championships": ["icu world cheerleading"],
+    "Bowling World Cup": ["bowling world cup"],
+    "World Tenpin Bowling Championships": ["world tenpin bowling"],
+    "World Lacrosse Championship": ["world lacrosse championship"],
+    "Major League Lacrosse Championship": ["major league lacrosse"],
+    "European Lacrosse Championships": ["european lacrosse"],
+    "Roller Hockey World Cup": ["roller hockey world cup"],
+    "Men's Softball World Championship": ["men's softball world championship"],
+    "Women's Softball World Championship": ["women's softball world championship"],
+    "ISF Men's World Championship": ["isf men's world championship"],
+    "ISF Women's World Championship": ["isf women's world championship"],
+    "World Cup of Softball": ["world cup of softball"],
+    "USA Softball International Cup": ["usa softball international cup"],
+    "Men's World Curling Championships": ["men's world curling"],
+    "Women's World Curling Championships": ["women's world curling"],
+    "Commonwealth Games": ["commonwealth games"],
+    "Asian Games": ["asian games"],
+    "European Games": ["european games"],
+    "African Games": ["african games"],
+    "Pan American Games": ["pan american games"],
+    "Universiade": ["universiade"],
+    "Australian Football International Cup": ["australian football international cup"],
+    "All-Ireland Senior Gaelic Football Championship": ["all-ireland senior gaelic football"],
+    "All-Ireland Senior Hurling Championship": ["all-ireland senior hurling"],
+    "European Senior Gaelic Football Championship": ["european senior gaelic football"],
+    "All-Ireland Senior Men's Rounders Championship": ["all-ireland senior men's rounders"],
+    "All-Ireland Senior Ladies Rounders Championship": ["all-ireland senior ladies rounders"],
+    "All-Ireland Senior Hardball Singles": ["all-ireland senior hardball singles"],
+    "All-Ireland Senior Softball Singles": ["all-ireland senior softball singles"],
+    "Christy Ring Cup": ["christy ring cup"],
+    "William Jones Cup": ["william jones cup"]
+}
+
 # eBay Autograph Authentication options (all 19 options)
 EBAY_AUTOGRAPH_AUTH = {
     "Beckett Authentication Services (BAS)": ["beckett", "bas", "beckett authentication"],
@@ -637,6 +748,7 @@ class CardLister:
             'autograph_auth': input("Autograph Authentication (e.g., Panini Authentic) [optional]: ").strip(),
             'team': input("Team/League (e.g., WWE, Lakers, Yankees) [optional]: ").strip(),
             'manufacturer': input("Manufacturer (e.g., Panini, Topps, Upper Deck) [optional]: ").strip(),
+            'event_tournament': input("Event/Tournament (e.g., Olympic Games, Super Bowl, World Cup) [optional]: ").strip(),
             'card_condition': input("Card Condition (Near Mint, Excellent, etc.) [optional]: ").strip(),
             'card_type': input("Card Type (Standard, Jumbo, etc.) [optional]: ").strip(),
         }
@@ -944,6 +1056,22 @@ class CardLister:
         
         # Default fallback
         return manufacturer_input.title()
+
+    def detect_event_tournament(self, event_input: str) -> str:
+        """Detect proper eBay event/tournament from user input."""
+        if not event_input:
+            return ""
+        
+        event_lower = event_input.lower().strip()
+        
+        # Check each event option
+        for event_name, keywords in EBAY_EVENTS_TOURNAMENTS.items():
+            for keyword in keywords:
+                if keyword.lower() in event_lower or event_lower in keyword.lower():
+                    return event_name
+        
+        # Default fallback
+        return event_input.title()
 
     def suggest_category(self, sport: str) -> Tuple[str, str]:
         """Suggests an eBay category ID based on the sport."""
