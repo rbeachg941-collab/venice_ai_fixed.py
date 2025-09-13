@@ -29,15 +29,148 @@ import argparse
 import sys
 
 # --- Configuration ---
-EBAY_CATEGORIES = {
-    "baseball": "213",
-    "basketball": "214", 
-    "football": "215",
-    "hockey": "216",
-    "soccer": "261328",
-    "wrestling": "261328",  # WWE cards use same category as trading cards
-    "multi-sport": "217",
-    "default": "261328"
+# eBay Sport options (all 104 options) with category mapping
+EBAY_SPORTS = {
+    # Major Sports with specific categories
+    "Baseball": "213",
+    "Basketball": "214", 
+    "Football": "215",
+    "Ice Hockey": "216",
+    "Soccer": "261328",
+    "Wrestling": "261328",
+    
+    # Other sports (use trading card category)
+    "Aikido": "261328",
+    "Alpine/Downhill": "261328",
+    "Archery": "261328",
+    "Athletics": "261328",
+    "Australian Football": "261328",
+    "Auto Racing": "261328",
+    "Backcountry Skiing": "261328",
+    "Badminton": "261328",
+    "Beach Soccer": "261328",
+    "Beach Volleyball": "261328",
+    "Biathlon": "261328",
+    "Billiards": "261328",
+    "Bobsleigh": "261328",
+    "Bodyboarding": "261328",
+    "Bodybuilding": "261328",
+    "Bowling": "261328",
+    "Bowls": "261328",
+    "Boxing": "261328",
+    "Breaking": "261328",
+    "Canoeing": "261328",
+    "Climbing": "261328",
+    "Cricket": "261328",
+    "Curling": "261328",
+    "Cycling": "261328",
+    "Dance": "261328",
+    "Darts": "261328",
+    "Diving": "261328",
+    "Dodgeball": "261328",
+    "Downhill Skiing": "261328",
+    "Equestrian": "261328",
+    "eSports": "261328",
+    "Fencing": "261328",
+    "Field Hockey": "261328",
+    "Figure Skating": "261328",
+    "Fistball": "261328",
+    "Gaelic Football": "261328",
+    "Gliding": "261328",
+    "Golf": "261328",
+    "Gymnastics": "261328",
+    "Handball": "261328",
+    "Horse Racing": "261328",
+    "Ice Skating": "261328",
+    "Jiu-Jitsu": "261328",
+    "Judo": "261328",
+    "Kabaddi": "261328",
+    "Karate": "261328",
+    "Kayaking": "261328",
+    "Kendo": "261328",
+    "Kitesurfing": "261328",
+    "Korfball": "261328",
+    "Krav Maga": "261328",
+    "Kung Fu": "261328",
+    "Lacrosse": "261328",
+    "Luge": "261328",
+    "Mixed Martial Arts (MMA)": "261328",
+    "Modern Pentathlon": "261328",
+    "Motorboat Racing": "261328",
+    "Motorcycle Racing": "261328",
+    "Muay Thai": "261328",
+    "Netball": "261328",
+    "Ninjitsu": "261328",
+    "Nordic/Cross-Country": "261328",
+    "Nordic Combined": "261328",
+    "Paragliding": "261328",
+    "Poker": "261328",
+    "Polo": "261328",
+    "Pool": "261328",
+    "Rallycross": "261328",
+    "Rodeo": "261328",
+    "Roller Derby": "261328",
+    "Roller Skating": "261328",
+    "Rowing": "261328",
+    "Rugby League": "261328",
+    "Rugby Union": "261328",
+    "Running": "261328",
+    "Sailing": "261328",
+    "Shooting": "261328",
+    "Skateboarding": "261328",
+    "Skeleton": "261328",
+    "Ski Jumping": "261328",
+    "Snowboarding": "261328",
+    "Softball": "261328",
+    "Squash": "261328",
+    "Surfing": "261328",
+    "Swimming": "261328",
+    "Table Tennis": "261328",
+    "Taekwondo": "261328",
+    "Tai Chi": "261328",
+    "Tchoukball": "261328",
+    "Telemark": "261328",
+    "Tennis": "261328",
+    "Trampolining": "261328",
+    "Triathlon": "261328",
+    "Volleyball": "261328",
+    "Wakeboarding": "261328",
+    "Water Polo": "261328",
+    "Weight Lifting": "261328",
+    "Windsurfing": "261328"
+}
+
+# Sport keyword mapping for detection
+SPORT_KEYWORDS = {
+    "baseball": "Baseball",
+    "basketball": "Basketball", 
+    "football": "Football",
+    "hockey": "Ice Hockey",
+    "ice hockey": "Ice Hockey",
+    "soccer": "Soccer",
+    "wrestling": "Wrestling",
+    "mma": "Mixed Martial Arts (MMA)",
+    "mixed martial arts": "Mixed Martial Arts (MMA)",
+    "tennis": "Tennis",
+    "golf": "Golf",
+    "boxing": "Boxing",
+    "cricket": "Cricket",
+    "rugby": "Rugby Union",
+    "rugby league": "Rugby League",
+    "rugby union": "Rugby Union",
+    "volleyball": "Volleyball",
+    "swimming": "Swimming",
+    "cycling": "Cycling",
+    "running": "Running",
+    "athletics": "Athletics",
+    "track and field": "Athletics",
+    "auto racing": "Auto Racing",
+    "motorcycle racing": "Motorcycle Racing",
+    "horse racing": "Horse Racing",
+    "poker": "Poker",
+    "esports": "eSports",
+    "e-sports": "eSports",
+    "electronic sports": "eSports"
 }
 
 # eBay Features field options (all 34 options)
@@ -583,10 +716,36 @@ class CardLister:
         # Default to the user input if provided
         return details.get('parallel_variety', '[Base]')
     
+    def detect_sport(self, sport_input: str) -> str:
+        """Detect proper eBay sport from user input."""
+        sport_lower = sport_input.lower().strip()
+        
+        # Check keyword mapping first
+        if sport_lower in SPORT_KEYWORDS:
+            return SPORT_KEYWORDS[sport_lower]
+        
+        # Check exact match in eBay sports
+        for sport_name in EBAY_SPORTS.keys():
+            if sport_lower == sport_name.lower():
+                return sport_name
+        
+        # Check partial match
+        for sport_name in EBAY_SPORTS.keys():
+            if sport_lower in sport_name.lower() or sport_name.lower() in sport_lower:
+                return sport_name
+        
+        # Default to Wrestling for WWE cards
+        if 'wwe' in sport_lower or 'wrestling' in sport_lower:
+            return "Wrestling"
+        
+        # Default fallback
+        return sport_input.title()
+
     def suggest_category(self, sport: str) -> Tuple[str, str]:
         """Suggests an eBay category ID based on the sport."""
-        category_id = EBAY_CATEGORIES.get(sport, EBAY_CATEGORIES["default"])
-        return category_id, sport.capitalize()
+        detected_sport = self.detect_sport(sport)
+        category_id = EBAY_SPORTS.get(detected_sport, "261328")
+        return category_id, detected_sport
     
     def analyze_pricing(self, details: Dict[str, str]) -> Optional[Dict]:
         """Scrapes eBay for sold listings to provide pricing analysis."""
