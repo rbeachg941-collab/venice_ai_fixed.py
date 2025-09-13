@@ -78,6 +78,24 @@ EBAY_FEATURES = {
     "AU": ["auto", "autograph", "au", "signed", "signature"]
 }
 
+# eBay Card Thickness options (all 14 options)
+EBAY_CARD_THICKNESS = {
+    "20 Pt.": ["20pt", "20 pt", "thin", "paper"],
+    "35 Pt.": ["35pt", "35 pt", "regular"],
+    "55 Pt.": ["55pt", "55 pt", "standard", "normal"],
+    "59 Pt.": ["59pt", "59 pt"],
+    "75 Pt.": ["75pt", "75 pt", "thick"],
+    "79 Pt.": ["79pt", "79 pt"],
+    "100 Pt.": ["100pt", "100 pt", "very thick"],
+    "108 Pt.": ["108pt", "108 pt"],
+    "130 Pt.": ["130pt", "130 pt", "extra thick"],
+    "138 Pt.": ["138pt", "138 pt"],
+    "180 Pt.": ["180pt", "180 pt", "super thick"],
+    "197 Pt.": ["197pt", "197 pt"],
+    "240 Pt.": ["240pt", "240 pt", "ultra thick"],
+    "360 Pt.": ["360pt", "360 pt", "maximum thick"]
+}
+
 # User agents for web scraping
 USER_AGENTS = [
     'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36',
