@@ -345,6 +345,177 @@ MAJOR_PARALLEL_VARIETIES = {
     "Rookie": ["rookie", "rc"]
 }
 
+# eBay Manufacturer options (all 167 options)
+EBAY_MANUFACTURERS = {
+    "Unbranded": ["unbranded", "generic"],
+    "5FINITY": ["5finity", "5finity"],
+    "7th Inning Sketch": ["7th inning sketch"],
+    "AAA Sports Memorabilia": ["aaa sports memorabilia"],
+    "Ace Authentic": ["ace authentic"],
+    "Action Packed": ["action packed"],
+    "AEG": ["aeg"],
+    "Allens": ["allens"],
+    "American Caramel": ["american caramel"],
+    "APBA": ["apba"],
+    "Argus": ["argus"],
+    "ArtBox": ["artbox"],
+    "Atlantic": ["atlantic"],
+    "AW Sports, Inc.": ["aw sports"],
+    "Bandai": ["bandai"],
+    "Baseball Magazine": ["baseball magazine"],
+    "Bazooka": ["bazooka"],
+    "Bench Warmer": ["bench warmer"],
+    "Bleachers": ["bleachers"],
+    "Blue Ocean Entertainment": ["blue ocean entertainment"],
+    "Bowman": ["bowman"],
+    "Breygent Marketing Inc.": ["breygent"],
+    "Bushiroad": ["bushiroad"],
+    "Calbee": ["calbee"],
+    "Callahan HALL OF FAME": ["callahan"],
+    "CARDZ Distribution": ["cardz distribution"],
+    "Champion Cards": ["champion cards"],
+    "Chicagoland Processing Corp.": ["chicagoland processing"],
+    "Choice Marketing, Inc": ["choice marketing"],
+    "Chris Martin Enterprises, Inc.": ["chris martin enterprises"],
+    "Classic Games, Inc": ["classic games"],
+    "Classic Marketing, Inc.": ["classic marketing"],
+    "CMC": ["cmc"],
+    "Coles": ["coles"],
+    "Collector's Edge": ["collectors edge", "collector's edge"],
+    "College Classics, Inc.": ["college classics"],
+    "Collegiate Collection": ["collegiate collection"],
+    "Comic Images": ["comic images"],
+    "Courtside": ["courtside"],
+    "Cracker Jack": ["cracker jack"],
+    "Cryptozoic": ["cryptozoic"],
+    "Dan Dee": ["dan dee"],
+    "Decipher": ["decipher"],
+    "Diamond Stars": ["diamond stars"],
+    "Disney": ["disney"],
+    "Donruss": ["donruss"],
+    "Donruss/Playoff": ["donruss/playoff", "donruss playoff"],
+    "Double Play": ["double play"],
+    "Dynamite Entertainment": ["dynamite entertainment"],
+    "Eclipse Cards": ["eclipse cards"],
+    "Enor": ["enor"],
+    "Exhibits": ["exhibits"],
+    "Extreme Sports Cards Inc.": ["extreme sports cards"],
+    "Fantasy Flight Games": ["fantasy flight games"],
+    "Félix Potin": ["felix potin"],
+    "Fleer": ["fleer"],
+    "Fleer/SkyBox International": ["fleer/skybox", "fleer skybox"],
+    "Futera": ["futera"],
+    "Glendale Publishers, Inc.": ["glendale publishers"],
+    "Goal Line": ["goal line"],
+    "Goal Line Art": ["goal line art"],
+    "Goudey": ["goudey"],
+    "Grandstand": ["grandstand"],
+    "H.O.F. Cards-I, LLC": ["hof cards", "h.o.f. cards"],
+    "Hasbro": ["hasbro"],
+    "Herald Sun": ["herald sun"],
+    "Hi-Pro Marketing, Inc.": ["hi-pro marketing"],
+    "Hoby Cards, Inc.": ["hoby cards"],
+    "Homogenized Bond": ["homogenized bond"],
+    "Horse Star Cards Inc.": ["horse star cards"],
+    "Impel": ["impel"],
+    "Imperial Tobacco Canada": ["imperial tobacco"],
+    "In the Game": ["in the game"],
+    "JOGO, Inc.": ["jogo"],
+    "Jogo Novelties": ["jogo novelties"],
+    "Just Memorabilia": ["just memorabilia"],
+    "Just Minors": ["just minors"],
+    "Kahn's": ["kahns", "kahn's"],
+    "Kellogg's": ["kelloggs", "kellogg's"],
+    "Kenner": ["kenner"],
+    "Konami": ["konami"],
+    "Kornies": ["kornies"],
+    "Layton Sports Cards": ["layton sports cards"],
+    "Leaf": ["leaf"],
+    "Marvel": ["marvel"],
+    "Meiji": ["meiji"],
+    "Merlin": ["merlin"],
+    "Milk Duds": ["milk duds"],
+    "Mobil": ["mobil"],
+    "Monty Gum": ["monty gum"],
+    "MSA": ["msa"],
+    "National Chicle": ["national chicle"],
+    "Navarrete": ["navarrete"],
+    "NBA Properties": ["nba properties"],
+    "NetPro": ["netpro"],
+    "NFL Players Association": ["nfl players association"],
+    "NFL Properties": ["nfl properties"],
+    "Nintendo": ["nintendo"],
+    "NSI Marketing Limited": ["nsi marketing"],
+    "Nu-Cards": ["nu-cards", "nu cards"],
+    "Onyx Authenticated": ["onyx authenticated"],
+    "O-Pee-Chee": ["o-pee-chee", "o pee chee"],
+    "Pacific": ["pacific"],
+    "Panini": ["panini"],
+    "Parkhurst": ["parkhurst"],
+    "Parkside": ["parkside"],
+    "Philadelphia Gum": ["philadelphia gum"],
+    "Pinnacle": ["pinnacle"],
+    "Playball": ["playball"],
+    "Playoff": ["playoff"],
+    "Post": ["post"],
+    "Press Pass": ["press pass"],
+    "ProCards": ["procards"],
+    "Pro Set": ["pro set"],
+    "R.E.L.": ["rel", "r.e.l."],
+    "Razor": ["razor"],
+    "Red Man": ["red man"],
+    "Regina": ["regina"],
+    "Ringside": ["ringside"],
+    "Rittenhouse": ["rittenhouse"],
+    "Roox Limited Corp.": ["roox limited"],
+    "SAGE": ["sage"],
+    "Scanlens": ["scanlens"],
+    "SCORE": ["score"],
+    "Select": ["select"],
+    "Sereal": ["sereal"],
+    "Shirriff Coins": ["shirriff coins"],
+    "Signature Rookies": ["signature rookies"],
+    "SkyBox": ["skybox"],
+    "Spin Master": ["spin master"],
+    "Sportflics": ["sportflics"],
+    "Sport Kings": ["sport kings"],
+    "Sportscaster": ["sportscaster"],
+    "Sports Illustrated": ["sports illustrated"],
+    "Square Enix": ["square enix"],
+    "Star Pics": ["star pics"],
+    "Stimoral": ["stimoral"],
+    "Strictly Ink": ["strictly ink"],
+    "Sunicrust": ["sunicrust"],
+    "Superior Pix": ["superior pix"],
+    "Superior Rookies": ["superior rookies"],
+    "Tazo": ["tazo"],
+    "TCMA": ["tcma"],
+    "Teamcoach": ["teamcoach"],
+    "Team Issue": ["team issue"],
+    "The Asher Candy Co.": ["asher candy"],
+    "The Furst Group": ["furst group"],
+    "The Score Board, Inc": ["score board"],
+    "The Star Co.": ["star co"],
+    "Topps": ["topps"],
+    "Topps Supreme": ["topps supreme"],
+    "Tristar": ["tristar"],
+    "Ty": ["ty"],
+    "Ultimate Guard": ["ultimate guard"],
+    "Ultimate Trading Card Co.": ["ultimate trading card"],
+    "Ultra PRO": ["ultra pro"],
+    "Unstoppable Cards": ["unstoppable cards"],
+    "Upper Deck": ["upper deck", "upperdeck"],
+    "Vachon": ["vachon"],
+    "WEG": ["weg"],
+    "Wheaties": ["wheaties"],
+    "Wheels": ["wheels"],
+    "White Wolf": ["white wolf"],
+    "Wild Card": ["wild card"],
+    "Wills": ["wills"],
+    "Wizards of the Coast": ["wizards of the coast"],
+    "WOW": ["wow"]
+}
+
 # Country/Region mapping based on manufacturer
 MANUFACTURER_COUNTRIES = {
     "Panini": "Italy",
@@ -354,11 +525,23 @@ MANUFACTURER_COUNTRIES = {
     "Donruss": "United States",
     "Leaf": "United States",
     "Bowman": "United States",
-    "Score": "United States",
+    "SCORE": "United States",
     "Beckett": "United States",
     "PSA": "United States",
     "BGS": "United States",
     "SGC": "United States",
+    "Konami": "Japan",
+    "Bandai": "Japan",
+    "Meiji": "Japan",
+    "Calbee": "Japan",
+    "Bushiroad": "Japan",
+    "Square Enix": "Japan",
+    "Nintendo": "Japan",
+    "Marvel": "United States",
+    "Disney": "United States",
+    "Hasbro": "United States",
+    "Wizards of the Coast": "United States",
+    "Cryptozoic": "United States",
     "default": "United States"
 }
 
@@ -674,12 +857,11 @@ class CardLister:
     
     def detect_country_region(self, details: Dict[str, str]) -> str:
         """Detect country/region of manufacture based on manufacturer."""
-        manufacturer = details.get('manufacturer', '').title()
+        detected_manufacturer = self.detect_manufacturer(details.get('manufacturer', ''))
         
         # Check manufacturer mapping
-        for mfg, country in MANUFACTURER_COUNTRIES.items():
-            if mfg.lower() in manufacturer.lower():
-                return country
+        if detected_manufacturer in MANUFACTURER_COUNTRIES:
+            return MANUFACTURER_COUNTRIES[detected_manufacturer]
         
         # Default to United States
         return MANUFACTURER_COUNTRIES["default"]
@@ -740,6 +922,28 @@ class CardLister:
         
         # Default fallback
         return sport_input.title()
+
+    def detect_manufacturer(self, manufacturer_input: str) -> str:
+        """Detect proper eBay manufacturer from user input."""
+        if not manufacturer_input:
+            return "Unbranded"
+        
+        manufacturer_lower = manufacturer_input.lower().strip()
+        
+        # Check exact match in eBay manufacturers
+        for manufacturer_name, keywords in EBAY_MANUFACTURERS.items():
+            for keyword in keywords:
+                if manufacturer_lower == keyword.lower():
+                    return manufacturer_name
+        
+        # Check partial match
+        for manufacturer_name, keywords in EBAY_MANUFACTURERS.items():
+            for keyword in keywords:
+                if keyword.lower() in manufacturer_lower or manufacturer_lower in keyword.lower():
+                    return manufacturer_name
+        
+        # Default fallback
+        return manufacturer_input.title()
 
     def suggest_category(self, sport: str) -> Tuple[str, str]:
         """Suggests an eBay category ID based on the sport."""
@@ -813,7 +1017,7 @@ class CardLister:
         
         # Optional fields with high search volume
         if details.get('manufacturer'):
-            specifics["Manufacturer"] = details['manufacturer']
+            specifics["Manufacturer"] = self.detect_manufacturer(details['manufacturer'])
         
         # Use intelligent parallel/variety detection
         detected_parallel = self.detect_parallel_variety(details)
